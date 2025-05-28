@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">BrainBuzz</string>
+    <string name="quiz_master">BrainBuzz</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="ready_to_test">Ready to test your knowledge?</string>
+    <string name="start_quiz">Start Quiz</string>
+    <string name="view_history">View History</string>
+    <string name="settings">Settings</string>
+    <string name="categories">Categories</string>
+    <string name="results">Results</string>
+    <string name="history">History</string>
+    <string name="next">NEXT</string>
+    <string name="finish">FINISH</string>
+    <string name="play_again">PLAY AGAIN</string>
+    <string name="share">SHARE</string>
+    <string name="home">HOME</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="notifications">Notifications</string>
+    <string name="text_to_speech">Text-to-Speech</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="sound_effects">Sound Effects</string>
+    <string name="clear_history">Clear History</string>
+    <string name="about_app">About App</string>
+    <string name="no_history">No quiz history yet</string>
+    <string name="back">Back</string>
+    <string name="correct">Correct:</string>
+    <string name="wrong">Wrong:</string>
+    <string name="percentage">Percentage:</string>
+    <string name="category">Category:</string>
+    <string name="score">Score:</string>
+    <string name="out_of">out of</string>
+    <string name="choose_category">Choose a category and begin</string>
+    <string name="past_results">See your past quiz results</string>
+    <string name="customize_experience">Customize your experience</string>
+</resources>

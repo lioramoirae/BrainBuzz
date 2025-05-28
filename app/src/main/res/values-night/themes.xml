@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme for dark mode -->
+    <style name="Theme.BrainBuzz" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/brain_buzz_accent</item>
+        <item name="colorPrimaryDark">@color/brain_buzz_primary</item>
+        <item name="colorAccent">@color/brain_buzz_accent</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/brain_buzz_primary</item>
+        <!-- Navigation bar color. -->
+        <item name="android:navigationBarColor">@color/brain_buzz_primary</item>
+        <!-- Light status bar text -->
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
