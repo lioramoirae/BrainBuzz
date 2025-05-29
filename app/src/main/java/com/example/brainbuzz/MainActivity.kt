@@ -1,31 +1,37 @@
 package com.example.brainbuzz
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
-import com.example.brainbuzz.navigation.QuizNavigation
-import com.example.brainbuzz.ui.theme.BrainBuzzTheme
-import dagger.hilt.android.AndroidEntryPoint
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var buttonStartQuiz: Button
+    private lateinit var buttonHistory: Button
+    private lateinit var buttonSettings: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            BrainBuzzTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    QuizNavigation()
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        buttonStartQuiz = findViewById(R.id.buttonStartQuiz)
+        buttonHistory = findViewById(R.id.buttonHistory)
+        buttonSettings = findViewById(R.id.buttonSettings)
+
+        buttonStartQuiz.setOnClickListener {
+            val intent = Intent(this, CategoriesActivity::class.java)
+            startActivity(intent)
+        }
+
+        buttonHistory.setOnClickListener {
+            val intent = Intent(this, HistoryActivity::class.java)
+            startActivity(intent)
+        }
+
+        buttonSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 }
