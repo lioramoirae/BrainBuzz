@@ -1,67 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@drawable/gradient_background">
+    android:background="#F5F5F5">
 
-    <TextView
+    <!-- Header Section -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose Category"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:gravity="center"
-        android:layout_marginBottom="32dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="24dp">
 
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="←"
+            android:textSize="20sp"
+            android:backgroundTint="#E0E0E0"
+            android:textColor="#333333" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Choose Category"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:gravity="center" />
+
+        <View
+            android:layout_width="48dp"
+            android:layout_height="48dp" />
+
+    </LinearLayout>
+
+    <!-- User Info Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:padding="16dp"
+        android:layout_marginBottom="24dp">
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome!"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/tv_user_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Casual User"
+            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:background="#2196F3"
+            android:padding="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp" />
+
+        <TextView
+            android:id="@+id/tv_user_stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score: 0 | Quizzes: 0"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_gravity="center"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+    <!-- Category Buttons -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select a Quiz Category:"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#333333"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Science Category -->
     <Button
-        android:id="@+id/buttonScience"
+        android:id="@+id/btn_science"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="🔬 Science"
         android:textSize="18sp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="#6A1B9A"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#4CAF50"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Geography Category -->
     <Button
-        android:id="@+id/buttonGeography"
+        android:id="@+id/btn_geography"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="🌍 Geography"
         android:textSize="18sp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="#6A1B9A"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2196F3"
+        android:layout_marginBottom="12dp" />
 
+    <!-- History Category -->
     <Button
-        android:id="@+id/buttonHistory"
+        android:id="@+id/btn_history"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="📚 History"
+        android:text="📜 History"
         android:textSize="18sp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="#6A1B9A"
-        android:layout_marginBottom="16dp" />
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#FF9800"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Entertainment Category -->
     <Button
-        android:id="@+id/buttonEntertainment"
+        android:id="@+id/btn_entertainment"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="🎬 Entertainment"
         android:textSize="18sp"
-        android:backgroundTint="@android:color/white"
-        android:textColor="#6A1B9A"
-        android:layout_marginBottom="32dp" />
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#9C27B0"
+        android:layout_marginBottom="24dp" />
 
-    <Button
-        android:id="@+id/buttonBack"
+    <!-- Tips Section -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Back to Main"
-        android:backgroundTint="#BB86FC" />
+        android:orientation="vertical"
+        android:background="#E8F5E8"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💡 Tips:"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="• Each category has 3 questions\n• You'll see explanations for each answer\n• Your progress is automatically saved"
+            android:textSize="12sp"
+            android:textColor="#2E7D32"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
 
 </LinearLayout>

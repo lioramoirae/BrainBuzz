@@ -15,15 +15,18 @@ class ResultsActivity : AppCompatActivity() {
     private lateinit var textViewMessage: TextView
     private lateinit var buttonPlayAgain: Button
     private lateinit var buttonHome: Button
+    private lateinit var userManager: UserManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_results)
 
+        userManager = UserManager.getInstance(this)
+
         initializeViews()
         displayResults()
         setupClickListeners()
-        saveQuizResult() // Add this line to save the result
+        saveQuizResult()
     }
 
     private fun initializeViews() {
@@ -44,12 +47,13 @@ class ResultsActivity : AppCompatActivity() {
         textViewScore.text = "$score/$total"
         textViewPercentage.text = "$percentage%"
 
+        // Use the category in the message (fixes the warning)
         val message = when {
-            percentage >= 90 -> "Excellent! Outstanding!"
-            percentage >= 80 -> "Great job! Well done!"
-            percentage >= 70 -> "Good work! Keep it up!"
-            percentage >= 60 -> "Not bad! Room for improvement."
-            else -> "Keep practicing! You'll get better!"
+            percentage >= 90 -> "Excellent! Outstanding performance in $category!"
+            percentage >= 80 -> "Great job! Well done in $category!"
+            percentage >= 70 -> "Good work in $category! Keep it up!"
+            percentage >= 60 -> "Not bad in $category! Room for improvement."
+            else -> "Keep practicing $category! You'll get better!"
         }
         textViewMessage.text = message
     }
@@ -58,26 +62,33 @@ class ResultsActivity : AppCompatActivity() {
         val score = intent.getIntExtra("score", 0)
         val total = intent.getIntExtra("total", 0)
         val category = intent.getStringExtra("category") ?: "Unknown"
+
+        // Save using UserManager
+        val success = userManager.updateUserStats(score, total, 0, category)
+
+        if (success) {
+            // Also save to SharedPreferences for backward compatibility
+            saveToSharedPreferences(score, total, category)
+        }
+    }
+
+    private fun saveToSharedPreferences(score: Int, total: Int, category: String) {
         val percentage = if (total > 0) (score * 100) / total else 0
         val dateTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())
 
         val sharedPreferences = getSharedPreferences("quiz_history", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // Get existing history
         val existingHistory = sharedPreferences.getString("history", "") ?: ""
-
-        // Create new entry
         val newEntry = "$dateTime|$category|$score/$total|$percentage%"
 
-        // Add to history (limit to last 10 entries)
         val updatedHistory = if (existingHistory.isEmpty()) {
             newEntry
         } else {
             val entries = existingHistory.split("\n").toMutableList()
-            entries.add(0, newEntry) // Add at beginning
+            entries.add(0, newEntry)
             if (entries.size > 10) {
-                entries.subList(0, 10) // Keep only last 10
+                entries.subList(0, 10)
             } else {
                 entries
             }.joinToString("\n")
