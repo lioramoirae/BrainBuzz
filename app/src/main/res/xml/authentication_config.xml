@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user_types>
+
+    <user_type id="CASUAL">
+        <name>Casual User</name>
+        <description>Play quick quizzes during free time</description>
+        <features>
+            <feature>No registration required</feature>
+            <feature>Quick quiz access</feature>
+            <feature>Basic score tracking</feature>
+            <feature>Limited progress history</feature>
+        </features>
+        <permissions>
+            <permission>PLAY_QUIZ</permission>
+            <permission>VIEW_BASIC_STATS</permission>
+        </permissions>
+        <restrictions>
+            <restriction>No leaderboards</restriction>
+            <restriction>No progress sync</restriction>
+            <restriction>Limited quiz types</restriction>
+        </restrictions>
+    </user_type>
+
+    <user_type id="STUDENT">
+        <name>Student</name>
+        <description>Practice general knowledge for learning</description>
+        <features>
+            <feature>Progress tracking</feature>
+            <feature>Subject categorization</feature>
+            <feature>Study mode with explanations</feature>
+            <feature>Performance analytics</feature>
+            <feature>Study streaks</feature>
+        </features>
+        <permissions>
+            <permission>PLAY_QUIZ</permission>
+            <permission>VIEW_DETAILED_STATS</permission>
+            <permission>ACCESS_STUDY_MODE</permission>
+            <permission>TRACK_PROGRESS</permission>
+            <permission>VIEW_EXPLANATIONS</permission>
+        </permissions>
+        <restrictions>
+            <restriction>No friend challenges</restriction>
+            <restriction>Limited leaderboard access</restriction>
+        </restrictions>
+    </user_type>
+
+    <user_type id="COMPETITIVE">
+        <name>Competitive User</name>
+        <description>Track scores and challenge friends</description>
+        <features>
+            <feature>Global leaderboards</feature>
+            <feature>Friend challenges</feature>
+            <feature>Advanced statistics</feature>
+            <feature>Achievement system</feature>
+            <feature>Social features</feature>
+            <feature>Tournament participation</feature>
+        </features>
+        <permissions>
+            <permission>PLAY_QUIZ</permission>
+            <permission>VIEW_DETAILED_STATS</permission>
+            <permission>ACCESS_LEADERBOARDS</permission>
+            <permission>CHALLENGE_FRIENDS</permission>
+            <permission>JOIN_TOURNAMENTS</permission>
+            <permission>UNLOCK_ACHIEVEMENTS</permission>
+        </permissions>
+        <restrictions>
+            <!-- No restrictions for competitive users -->
+        </restrictions>
+    </user_type>
+
+</user_types>

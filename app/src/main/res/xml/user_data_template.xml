@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<user_data_template>
+
+    <basic_info>
+        <field name="id" type="string" required="true"/>
+        <field name="email" type="string" required="false"/>
+        <field name="username" type="string" required="true"/>
+        <field name="user_type" type="enum" required="true" values="CASUAL,STUDENT,COMPETITIVE"/>
+        <field name="created_at" type="timestamp" required="true"/>
+        <field name="is_guest" type="boolean" required="true" default="false"/>
+    </basic_info>
+
+    <statistics>
+        <field name="total_score" type="integer" default="0"/>
+        <field name="quizzes_completed" type="integer" default="0"/>
+        <field name="average_score" type="float" default="0.0"/>
+        <field name="streak_days" type="integer" default="0"/>
+        <field name="best_score" type="integer" default="0"/>
+        <field name="worst_score" type="integer" default="0"/>
+        <field name="total_time_spent" type="integer" default="0"/>
+    </statistics>
+
+    <preferences>
+        <field name="difficulty_preference" type="enum" values="EASY,MEDIUM,HARD" default="MEDIUM"/>
+        <field name="category_preferences" type="string_array" default=""/>
+        <field name="notification_enabled" type="boolean" default="true"/>
+        <field name="sound_enabled" type="boolean" default="true"/>
+        <field name="dark_mode" type="boolean" default="false"/>
+    </preferences>
+
+    <social>
+        <field name="friends_list" type="string_array" default=""/>
+        <field name="achievements" type="string_array" default=""/>
+        <field name="challenge_invites" type="string_array" default=""/>
+        <field name="public_profile" type="boolean" default="false"/>
+    </social>
+
+    <session_info>
+        <field name="last_login_date" type="timestamp" default="0"/>
+        <field name="last_quiz_date" type="timestamp" default="0"/>
+        <field name="session_count" type="integer" default="0"/>
+        <field name="device_id" type="string" default=""/>
+    </session_info>
+
+</user_data_template>

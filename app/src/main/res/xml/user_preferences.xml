@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Current User Session -->
+    <PreferenceCategory android:title="User Session">
+        <Preference
+            android:key="current_user_id"
+            android:title="Current User ID"
+            android:summary="Stores the currently logged in user ID" />
+
+        <Preference
+            android:key="is_logged_in"
+            android:title="Login Status"
+            android:summary="Whether user is currently logged in" />
+
+        <Preference
+            android:key="session_token"
+            android:title="Session Token"
+            android:summary="Current session authentication token" />
+
+        <Preference
+            android:key="login_timestamp"
+            android:title="Login Time"
+            android:summary="When the user last logged in" />
+    </PreferenceCategory>
+
+    <!-- User Data Cache -->
+    <PreferenceCategory android:title="User Data">
+        <Preference
+            android:key="cached_user_data"
+            android:title="Cached User Information"
+            android:summary="JSON string of current user data" />
+
+        <Preference
+            android:key="user_type"
+            android:title="User Type"
+            android:summary="CASUAL, STUDENT, or COMPETITIVE" />
+
+        <Preference
+            android:key="remember_login"
+            android:title="Remember Login"
+            android:summary="Whether to keep user logged in" />
+    </PreferenceCategory>
+
+    <!-- User Statistics -->
+    <PreferenceCategory android:title="Statistics">
+        <Preference
+            android:key="total_score"
+            android:title="Total Score"
+            android:summary="Cumulative score across all quizzes" />
+
+        <Preference
+            android:key="quizzes_completed"
+            android:title="Quizzes Completed"
+            android:summary="Number of quizzes finished" />
+
+        <Preference
+            android:key="current_streak"
+            android:title="Current Streak"
+            android:summary="Days of consecutive quiz activity" />
+
+        <Preference
+            android:key="achievements_unlocked"
+            android:title="Achievements"
+            android:summary="List of earned achievements" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

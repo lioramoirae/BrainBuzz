@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database_schema>
+    <table name="users">
+        <column name="id" type="TEXT" primary_key="true"/>
+        <column name="email" type="TEXT" unique="true"/>
+        <column name="username" type="TEXT"/>
+        <column name="password_hash" type="TEXT"/>
+        <column name="user_type" type="TEXT"/>
+        <column name="created_at" type="INTEGER"/>
+        <column name="total_score" type="INTEGER" default="0"/>
+        <column name="quizzes_completed" type="INTEGER" default="0"/>
+        <column name="average_score" type="REAL" default="0.0"/>
+        <column name="streak_days" type="INTEGER" default="0"/>
+        <column name="last_login_date" type="INTEGER" default="0"/>
+        <column name="achievements" type="TEXT" default=""/>
+        <column name="is_guest" type="INTEGER" default="0"/>
+    </table>
+
+    <table name="user_sessions">
+        <column name="user_id" type="TEXT" primary_key="true"/>
+        <column name="session_token" type="TEXT"/>
+        <column name="login_time" type="INTEGER"/>
+        <column name="is_active" type="INTEGER" default="1"/>
+    </table>
+
+    <table name="quiz_results">
+        <column name="id" type="TEXT" primary_key="true"/>
+        <column name="user_id" type="TEXT"/>
+        <column name="quiz_type" type="TEXT"/>
+        <column name="score" type="INTEGER"/>
+        <column name="max_score" type="INTEGER"/>
+        <column name="time_taken" type="INTEGER"/>
+        <column name="completed_at" type="INTEGER"/>
+        <column name="questions_correct" type="INTEGER"/>
+        <column name="questions_total" type="INTEGER"/>
+    </table>
+</database_schema>
