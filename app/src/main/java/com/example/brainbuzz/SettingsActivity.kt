@@ -270,8 +270,6 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun showChangePasswordDialog() {
-        val dialogView = layoutInflater.inflate(android.R.layout.simple_list_item_2, null)
-
         AlertDialog.Builder(this)
             .setTitle("🔒 Change Password")
             .setMessage("This feature will allow you to update your password securely.\n\nComing soon in the next update!")

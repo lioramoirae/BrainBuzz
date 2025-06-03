@@ -33,7 +33,7 @@ class SignupActivity : AppCompatActivity() {
         val etUsername = findViewById<EditText>(R.id.et_username)
         val etPassword = findViewById<EditText>(R.id.et_password)
         val etConfirmPassword = findViewById<EditText>(R.id.et_confirm_password)
-        val btnSignup = findViewById<Button>(R.id.btn_signup)
+        val btnSignup = findViewById<Button>(R.id.btn_create_account) // Fixed: Changed from btn_signup to btn_create_account
         val tvLogin = findViewById<TextView>(R.id.tv_login)
 
         // Optional: Show user type in title or as toast
@@ -105,23 +105,26 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun performSignup(email: String, username: String, password: String) {
-        val result = userManager.registerUser(email, username, password, selectedUserType)
+        val result = userManager.registerUser(username, email, password, selectedUserType)
 
         when (result) {
-            UserManager.RegisterResult.SUCCESS -> {
+            RegisterResult.SUCCESS -> {
                 Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
                 navigateToMain()
             }
-            UserManager.RegisterResult.EMAIL_EXISTS -> {
-                Toast.makeText(this, "An account with this email already exists", Toast.LENGTH_LONG).show()
+            RegisterResult.USER_EXISTS -> {
+                Toast.makeText(this, "An account with this email or username already exists", Toast.LENGTH_LONG).show()
             }
-            UserManager.RegisterResult.USERNAME_TOO_SHORT -> {
+            RegisterResult.USERNAME_TOO_SHORT -> {
                 Toast.makeText(this, "Username must be at least 3 characters", Toast.LENGTH_SHORT).show()
             }
-            UserManager.RegisterResult.PASSWORD_TOO_SHORT -> {
+            RegisterResult.PASSWORD_TOO_SHORT -> {
                 Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
             }
-            UserManager.RegisterResult.FAILED -> {
+            RegisterResult.INVALID_EMAIL -> {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+            }
+            RegisterResult.FAILED -> {
                 Toast.makeText(this, "Failed to create account. Please try again.", Toast.LENGTH_SHORT).show()
             }
         }
