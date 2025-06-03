@@ -108,12 +108,13 @@ class MainActivity : AppCompatActivity() {
                 UserType.COMPETITIVE -> "Competitive"
             }
 
-            // Update progress details
+            // Update progress details with correct percentage calculation
+            val userStats = userManager.getUserStats()
             findViewById<TextView>(R.id.tv_progress_details)?.text =
-                if (currentUser.quizzesCompleted == 0) {
+                if ((userStats?.totalQuizzes ?: 0) == 0) {
                     "Take your first quiz to see your progress!"
                 } else {
-                    "Average Score: ${"%.1f".format(currentUser.averageScore)} • Total Quizzes: ${currentUser.quizzesCompleted}"
+                    "Average Score: ${"%.1f".format(userStats?.averageScore ?: 0.0)}% • Total Quizzes: ${userStats?.totalQuizzes ?: 0}"
                 }
 
             // Show/hide guest-specific UI elements - NEW!

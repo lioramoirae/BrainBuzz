@@ -151,9 +151,13 @@ class UserManager(private val context: Context) {
             }
         }
 
-        // Set defaults if needed
-        if (maxScore == 0) maxScore = score
+        // IMPORTANT FIX: If maxScore is 0 or invalid, set it equal to score
+        // This assumes perfect score if maxScore isn't provided correctly
+        if (maxScore <= 0) maxScore = score
         if (category.isEmpty()) category = "General"
+
+        // Debug log
+        android.util.Log.d("BrainBuzz", "updateUserStats: score=$score, maxScore=$maxScore, category=$category")
 
         return saveQuizResult(category, score, maxScore, timeTaken)
     }
