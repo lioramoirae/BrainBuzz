@@ -1,116 +1,81 @@
 package com.example.brainbuzz
 
 import android.content.Context
-import android.widget.Toast
 
-object QuizIntegration {
+class QuizIntegration(private val context: Context) {
+    private val userManager = LocalUserManager(context)
 
-    fun saveQuizResult(
-        context: Context,
-        score: Int,
-        maxScore: Int,
-        timeTaken: Int = 0,
-        category: String = "General"
-    ) {
-        val userManager = UserManager.getInstance(context)
-
-        if (userManager.isLoggedIn()) {
-            val success = userManager.updateUserStats(score, maxScore, timeTaken, category)
-
-            if (success) {
-                val user = userManager.getCurrentUser()
-                user?.let {
-                    val message = if (it.isGuest) {
-                        "Quiz completed! Score: $score/$maxScore"
-                    } else {
-                        "Quiz saved! Total score: ${it.totalScore}"
-                    }
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+    fun saveQuizResult(category: String, score: Int, maxScore: Int, timeTaken: Int = 0): Boolean {
+        // Save the quiz result using the LocalUserManager
+        return userManager.saveQuizResult(category, score, maxScore, timeTaken)
     }
 
-    fun getCurrentUserInfo(context: Context): String? {
-        val userManager = UserManager.getInstance(context)
-        val user = userManager.getCurrentUser()
-
-        return user?.let {
-            if (it.isGuest) {
-                "Welcome Guest | Score: ${it.totalScore} | Quizzes: ${it.quizzesCompleted}"
-            } else {
-                "Welcome ${it.username} | Score: ${it.totalScore} | Quizzes: ${it.quizzesCompleted}"
-            }
-        }
+    fun getCurrentUser(): LocalUser? {
+        return userManager.getCurrentUser()
     }
 
-    fun getUserStats(context: Context): UserStats? {
-        val userManager = UserManager.getInstance(context)
-        val user = userManager.getCurrentUser()
-
-        return user?.let {
-            UserStats(
-                username = it.username,
-                userType = it.userType,
-                totalScore = it.totalScore,
-                quizzesCompleted = it.quizzesCompleted,
-                averageScore = it.averageScore.toDouble(),
-                streakDays = it.streakDays,
-                isGuest = it.isGuest
-            )
-        }
+    fun getQuizHistory(limit: Int = 20): List<QuizResult> {
+        return userManager.getQuizHistory(limit)
     }
 
-    fun getEncouragementMessage(context: Context, score: Int, maxScore: Int): String {
-        val userManager = UserManager.getInstance(context)
-        val user = userManager.getCurrentUser()
-        val percentage = if (maxScore > 0) (score.toDouble() / maxScore) * 100 else 0.0
-
-        return when (user?.userType) {
-            UserType.STUDENT -> {
-                when {
-                    percentage >= 90 -> "Excellent! You're mastering this subject! 📚"
-                    percentage >= 70 -> "Good job! Keep studying to improve further! 📖"
-                    percentage >= 50 -> "Not bad! Review the topics you missed. 📝"
-                    else -> "Keep practicing! Every attempt makes you better! 💪"
-                }
-            }
-            UserType.COMPETITIVE -> {
-                when {
-                    percentage >= 90 -> "Outstanding! You're climbing the leaderboard! 🏆"
-                    percentage >= 70 -> "Great score! Challenge your friends! 🎯"
-                    percentage >= 50 -> "Good effort! Practice more to dominate! ⚡"
-                    else -> "Don't give up! Champions are made through practice! 🥊"
-                }
-            }
-            else -> {
-                when {
-                    percentage >= 90 -> "Amazing! You're a quiz master! 🌟"
-                    percentage >= 70 -> "Well done! That was fun! 😊"
-                    percentage >= 50 -> "Nice try! Quiz time is always learning time! 🧠"
-                    else -> "Good attempt! Every quiz makes you smarter! 🚀"
-                }
-            }
-        }
-    }
-
-    fun isLoggedIn(context: Context): Boolean {
-        val userManager = UserManager.getInstance(context)
+    fun isUserLoggedIn(): Boolean {
         return userManager.isLoggedIn()
     }
 
-    fun logout(context: Context) {
-        val userManager = UserManager.getInstance(context)
+    // Calculate user statistics from quiz history
+    fun getUserStats(): UserStats? {
+        val user = getCurrentUser() ?: return null
+        val history = getQuizHistory()
+
+        if (history.isEmpty()) {
+            return UserStats(
+                totalQuizzes = 0,
+                averageScore = 0.0,
+                bestScore = 0,
+                totalScore = user.totalScore,
+                favoriteCategory = "None"
+            )
+        }
+
+        val bestScore = history.maxOfOrNull { it.score } ?: 0
+        val averageScore = history.map { it.score }.average()
+
+        // Find most frequent category
+        val categoryCount = history.groupingBy { it.category }.eachCount()
+        val favoriteCategory = categoryCount.maxByOrNull { it.value }?.key ?: "None"
+
+        return UserStats(
+            totalQuizzes = history.size,
+            averageScore = averageScore,
+            bestScore = bestScore,
+            totalScore = user.totalScore,
+            favoriteCategory = favoriteCategory
+        )
+    }
+
+    // Create a simple User object from LocalUser for backward compatibility
+    fun getUserForDisplay(): User? {
+        val localUser = getCurrentUser() ?: return null
+
+        return User(
+            id = localUser.id.toLong(),
+            username = localUser.username,
+            email = localUser.email,
+            userType = localUser.userType,
+            totalScore = localUser.totalScore,
+            quizzesCompleted = localUser.quizzesCompleted,
+            averageScore = localUser.averageScore,
+            registrationDate = localUser.createdAt,
+            streakDays = 0, // Default value since we don't track streaks yet
+            isGuest = localUser.isGuest
+        )
+    }
+
+    fun updateUserType(newUserType: UserType): Boolean {
+        return userManager.updateUserType(newUserType)
+    }
+
+    fun logout() {
         userManager.logout()
     }
 }
-
-data class UserStats(
-    val username: String,
-    val userType: UserType,
-    val totalScore: Int,
-    val quizzesCompleted: Int,
-    val averageScore: Double,
-    val streakDays: Int,
-    val isGuest: Boolean
-)

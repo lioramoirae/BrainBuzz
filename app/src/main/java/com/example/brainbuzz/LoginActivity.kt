@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.brainbuzz.LoginResult
 
 class LoginActivity : AppCompatActivity() {
 
@@ -71,20 +72,23 @@ class LoginActivity : AppCompatActivity() {
         return true
     }
 
-    private fun performLogin(email: String, password: String) {
-        val result = userManager.loginUser(email, password)
+    private fun performLogin(usernameOrEmail: String, password: String) {
+        val result = userManager.loginUser(usernameOrEmail, password)
 
         when (result) {
-            UserManager.LoginResult.SUCCESS -> {
-                val user = userManager.getCurrentUser()
-                Toast.makeText(this, "Welcome back, ${user?.username}!", Toast.LENGTH_SHORT).show()
-                navigateToMain()
+            LoginResult.SUCCESS -> {
+                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show()
+                // Navigate to main activity
+                val intent = Intent(this, MainActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
             }
-            UserManager.LoginResult.INVALID_CREDENTIALS -> {
-                Toast.makeText(this, "Invalid email or password", Toast.LENGTH_SHORT).show()
+            LoginResult.INVALID_CREDENTIALS -> {
+                Toast.makeText(this, "Invalid username/email or password", Toast.LENGTH_SHORT).show()
             }
-            UserManager.LoginResult.USER_NOT_FOUND -> {
-                Toast.makeText(this, "Account not found", Toast.LENGTH_SHORT).show()
+            else -> {
+                Toast.makeText(this, "Login failed. Please try again.", Toast.LENGTH_SHORT).show()
             }
         }
     }

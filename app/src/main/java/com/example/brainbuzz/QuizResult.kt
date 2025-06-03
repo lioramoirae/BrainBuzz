@@ -1,5 +1,6 @@
 package com.example.brainbuzz
 
+// Quiz Result data class
 data class QuizResult(
     val id: Long = 0L,
     val userId: Long,
