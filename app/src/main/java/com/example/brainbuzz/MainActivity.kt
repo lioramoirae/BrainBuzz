@@ -114,10 +114,11 @@ class MainActivity : AppCompatActivity() {
                 if ((userStats?.totalQuizzes ?: 0) == 0) {
                     "Take your first quiz to see your progress!"
                 } else {
-                    "Average Score: ${"%.1f".format(userStats?.averageScore ?: 0.0)}% • Total Quizzes: ${userStats?.totalQuizzes ?: 0}"
+                    val percent = ((userStats?.averageScore ?: 0.0) / 3.0) * 100  // assuming max score is set to 3
+                    "Average Score: ${"%.0f".format(percent)}% • Total Quizzes: ${userStats?.totalQuizzes ?: 0}"
                 }
 
-            // Show/hide guest-specific UI elements - NEW!
+            // Show/hide guest-specific UI elements
             setupGuestUI(currentUser.isGuest)
 
             // Show user type specific features
