@@ -321,6 +321,11 @@ class LocalUserManager(private val context: Context) {
         return null
     }
 
+    fun deleteQuizHistoryByUserId(userId:Long){
+        val db = database.writableDatabase
+        db.delete("quiz_history", "user_id = ?", arrayOf(userId.toString()))
+    }
+
     // Save quiz result - Updated to include timeTaken parameter
     fun saveQuizResult(category: String, score: Int, maxScore: Int, timeTaken: Int = 0): Boolean {
         val currentUser = getCurrentUser() ?: return false
