@@ -2,11 +2,9 @@ package com.example.brainbuzz
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 
 class SignupActivity : AppCompatActivity() {
@@ -20,7 +18,6 @@ class SignupActivity : AppCompatActivity() {
 
         userManager = UserManager.getInstance(this)
 
-        // Get user type from intent or default to CASUAL
         val userTypeString = intent.getStringExtra("user_type") ?: UserType.CASUAL.name
         selectedUserType = UserType.valueOf(userTypeString)
 
@@ -33,75 +30,110 @@ class SignupActivity : AppCompatActivity() {
         val etUsername = findViewById<EditText>(R.id.et_username)
         val etPassword = findViewById<EditText>(R.id.et_password)
         val etConfirmPassword = findViewById<EditText>(R.id.et_confirm_password)
-        val btnSignup = findViewById<Button>(R.id.btn_create_account) // Fixed: Changed from btn_signup to btn_create_account
+        val checkboxTerms = findViewById<CheckBox>(R.id.checkbox_terms)
+        val btnSignup = findViewById<Button>(R.id.btn_create_account)
         val tvLogin = findViewById<TextView>(R.id.tv_login)
 
-        // Optional: Show user type in title or as toast
-        supportActionBar?.title = "Sign Up as ${selectedUserType.name.lowercase().replaceFirstChar { it.uppercase() }}"
+        supportActionBar?.title =
+            "Sign Up as ${selectedUserType.name.lowercase().replaceFirstChar { it.uppercase() }}"
 
-        // Back button
-        btnBack?.setOnClickListener {
+        btnBack.setOnClickListener { finish() }
+
+        tvLogin.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // Signup button
-        btnSignup?.setOnClickListener {
-            // Fixed: Remove redundant Elvis operators
-            val email = etEmail?.text?.toString()?.trim() ?: ""
-            val username = etUsername?.text?.toString()?.trim() ?: ""
-            val password = etPassword?.text?.toString() ?: ""
-            val confirmPassword = etConfirmPassword?.text?.toString() ?: ""
+        fun updateButtonState() {
+            val email = etEmail.text.toString().trim()
+            val username = etUsername.text.toString().trim()
+            val password = etPassword.text.toString()
+            val confirmPassword = etConfirmPassword.text.toString()
+            val agreed = checkboxTerms.isChecked
 
-            if (validateInput(email, username, password, confirmPassword)) {
+            btnSignup.isEnabled = email.isNotEmpty() &&
+                    username.isNotEmpty() &&
+                    password.isNotEmpty() &&
+                    confirmPassword.isNotEmpty() &&
+                    password == confirmPassword &&
+                    agreed
+        }
+
+        val watcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = updateButtonState()
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        etEmail.addTextChangedListener(watcher)
+        etUsername.addTextChangedListener(watcher)
+        etPassword.addTextChangedListener(watcher)
+        etConfirmPassword.addTextChangedListener(watcher)
+        checkboxTerms.setOnCheckedChangeListener { _, _ -> updateButtonState() }
+
+        btnSignup.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val username = etUsername.text.toString().trim()
+            val password = etPassword.text.toString()
+            val confirmPassword = etConfirmPassword.text.toString()
+
+            if (validateInput(etEmail, etUsername, etPassword, etConfirmPassword)) {
                 performSignup(email, username, password)
             }
         }
-
-        // Login link
-        tvLogin?.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
     }
 
-    private fun validateInput(email: String, username: String, password: String, confirmPassword: String): Boolean {
-        if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show()
-            return false
-        }
+    private fun validateInput(
+        etEmail: EditText,
+        etUsername: EditText,
+        etPassword: EditText,
+        etConfirmPassword: EditText
+    ): Boolean {
+        var isValid = true
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
-            return false
+        val email = etEmail.text.toString().trim()
+        val username = etUsername.text.toString().trim()
+        val password = etPassword.text.toString()
+        val confirmPassword = etConfirmPassword.text.toString()
+
+        etEmail.error = null
+        etUsername.error = null
+        etPassword.error = null
+        etConfirmPassword.error = null
+
+        if (email.isEmpty()) {
+            etEmail.error = "Please enter your email"
+            isValid = false
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.error = "Invalid email format"
+            isValid = false
         }
 
         if (username.isEmpty()) {
-            Toast.makeText(this, "Please enter a username", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        if (username.length < 3) {
-            Toast.makeText(this, "Username must be at least 3 characters", Toast.LENGTH_SHORT).show()
-            return false
+            etUsername.error = "Please enter a username"
+            isValid = false
+        } else if (username.length < 3) {
+            etUsername.error = "Username must be at least 3 characters"
+            isValid = false
         }
 
         if (password.isEmpty()) {
-            Toast.makeText(this, "Please enter a password", Toast.LENGTH_SHORT).show()
-            return false
+            etPassword.error = "Please enter a password"
+            isValid = false
+        } else if (password.length < 6) {
+            etPassword.error = "Password must be at least 6 characters"
+            isValid = false
         }
 
-        if (password.length < 6) {
-            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
-            return false
+        if (confirmPassword.isEmpty()) {
+            etConfirmPassword.error = "Please confirm your password"
+            isValid = false
+        } else if (password != confirmPassword) {
+            etConfirmPassword.error = "Passwords do not match"
+            isValid = false
         }
 
-        if (password != confirmPassword) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-            return false
-        }
-
-        return true
+        return isValid
     }
 
     private fun performSignup(email: String, username: String, password: String) {
@@ -109,23 +141,26 @@ class SignupActivity : AppCompatActivity() {
 
         when (result) {
             RegisterResult.SUCCESS -> {
-                Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
                 navigateToMain()
             }
             RegisterResult.USER_EXISTS -> {
-                Toast.makeText(this, "An account with this email or username already exists", Toast.LENGTH_LONG).show()
+                findViewById<EditText>(R.id.et_email).error =
+                    "Email or username already exists"
             }
             RegisterResult.USERNAME_TOO_SHORT -> {
-                Toast.makeText(this, "Username must be at least 3 characters", Toast.LENGTH_SHORT).show()
+                findViewById<EditText>(R.id.et_username).error =
+                    "Username must be at least 3 characters"
             }
             RegisterResult.PASSWORD_TOO_SHORT -> {
-                Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
+                findViewById<EditText>(R.id.et_password).error =
+                    "Password must be at least 6 characters"
             }
             RegisterResult.INVALID_EMAIL -> {
-                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show()
+                findViewById<EditText>(R.id.et_email).error =
+                    "Please enter a valid email address"
             }
             RegisterResult.FAILED -> {
-                Toast.makeText(this, "Failed to create account. Please try again.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unexpected error. Try again.", Toast.LENGTH_SHORT).show()
             }
         }
     }
