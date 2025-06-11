@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var userManager: UserManager
-    private lateinit var localUserManager: LocalUserManager
     private lateinit var historyContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +18,6 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(R.layout.activity_history)
 
         userManager = UserManager.getInstance(this)
-        localUserManager = LocalUserManager(this)
 
         setupViews()
         loadHistory()
@@ -44,12 +42,6 @@ class HistoryActivity : AppCompatActivity() {
         }
 
         updateUserStats()
-    }
-
-
-    private fun deleteUserQuizHistory(){
-        val user = userManager.getCurrentUser()
-        localUserManager.deleteQuizHistoryByUserId(user!!.id)
     }
 
     private fun updateUserStats() {
@@ -287,11 +279,10 @@ class HistoryActivity : AppCompatActivity() {
             userManager.resetUserStatistics()
         }
 
-        this.deleteUserQuizHistory()
         // Refresh display
         historyContainer.removeAllViews()
-        //loadHistory()
-
+        updateUserStats()
+        loadHistory()
 
         Toast.makeText(this, "History cleared successfully", Toast.LENGTH_SHORT).show()
     }

@@ -98,7 +98,8 @@ class LocalUserDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_N
 // Local User Manager - Simplified
 class LocalUserManager(private val context: Context) {
     private val database = LocalUserDatabase(context)
-    private val sharedPrefs = context.getSharedPreferences("local_user_session", Context.MODE_PRIVATE)
+    private val sharedPrefs =
+        context.getSharedPreferences("local_user_session", Context.MODE_PRIVATE)
 
     // Hash password for security
     private fun hashPassword(password: String): String {
@@ -108,7 +109,12 @@ class LocalUserManager(private val context: Context) {
     }
 
     // Register new user
-    fun registerUser(username: String, email: String, password: String, userType: UserType): RegisterResult {
+    fun registerUser(
+        username: String,
+        email: String,
+        password: String,
+        userType: UserType
+    ): RegisterResult {
         if (username.length < 3) return RegisterResult.USERNAME_TOO_SHORT
         if (password.length < 6) return RegisterResult.PASSWORD_TOO_SHORT
         if (!isValidEmail(email)) return RegisterResult.INVALID_EMAIL
@@ -168,7 +174,15 @@ class LocalUserManager(private val context: Context) {
         try {
             val cursor = db.query(
                 "users",
-                arrayOf("id", "username", "email", "user_type", "total_score", "quizzes_completed", "average_score"),
+                arrayOf(
+                    "id",
+                    "username",
+                    "email",
+                    "user_type",
+                    "total_score",
+                    "quizzes_completed",
+                    "average_score"
+                ),
                 "(username = ? OR email = ?) AND password_hash = ? AND is_guest = 0",
                 arrayOf(usernameOrEmail, usernameOrEmail, passwordHash),
                 null, null, null
@@ -319,11 +333,6 @@ class LocalUserManager(private val context: Context) {
         }
 
         return null
-    }
-
-    fun deleteQuizHistoryByUserId(userId:Long){
-        val db = database.writableDatabase
-        db.delete("quiz_history", "user_id = ?", arrayOf(userId.toString()))
     }
 
     // Save quiz result - Updated to include timeTaken parameter
@@ -477,5 +486,40 @@ class LocalUserManager(private val context: Context) {
 
     enum class LoginResult {
         SUCCESS, INVALID_CREDENTIALS, FAILED
+    }
+
+    fun deleteQuizHistoryByUserId(userId: Long): Boolean {
+        val db = database.writableDatabase
+
+        try {
+            val rowsDeleted = db.delete(
+                "quiz_history",
+                "user_id = ?",
+                arrayOf(userId.toString())
+            )
+
+            // Reset user stats to zero
+            val values = ContentValues().apply {
+                put("total_score", 0)
+                put("quizzes_completed", 0)
+                put("average_score", 0.0)
+            }
+
+            val rowsUpdated = db.update(
+                "users",
+                values,
+                "id = ?",
+                arrayOf(userId.toString())
+            )
+
+            return rowsDeleted >= 0 && rowsUpdated > 0
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.close()
+        }
+
+        return false
     }
 }

@@ -75,7 +75,6 @@ class SignupActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val username = etUsername.text.toString().trim()
             val password = etPassword.text.toString()
-            val confirmPassword = etConfirmPassword.text.toString()
 
             if (validateInput(etEmail, etUsername, etPassword, etConfirmPassword)) {
                 performSignup(email, username, password)
