@@ -2,6 +2,9 @@ package com.example.brainbuzz
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -12,6 +15,7 @@ class QuizActivity : AppCompatActivity() {
     private lateinit var textViewQuestion: TextView
     private lateinit var textViewQuestionNumber: TextView
     private lateinit var textViewCategory: TextView
+    private lateinit var textViewFeedback: TextView  // NEW: For showing feedback
     private lateinit var buttonOption1: Button
     private lateinit var buttonOption2: Button
     private lateinit var buttonOption3: Button
@@ -52,6 +56,7 @@ class QuizActivity : AppCompatActivity() {
         textViewQuestion = findViewById(R.id.textViewQuestion)
         textViewQuestionNumber = findViewById(R.id.textViewQuestionNumber)
         textViewCategory = findViewById(R.id.textViewCategory)
+        textViewFeedback = findViewById(R.id.textViewFeedback)  // NEW: Add this to your layout
         buttonOption1 = findViewById(R.id.buttonOption1)
         buttonOption2 = findViewById(R.id.buttonOption2)
         buttonOption3 = findViewById(R.id.buttonOption3)
@@ -61,6 +66,7 @@ class QuizActivity : AppCompatActivity() {
 
         textViewCategory.text = category
         buttonNext.isEnabled = false
+        textViewFeedback.visibility = View.GONE  // Hide feedback initially
     }
 
     private fun loadQuestions() {
@@ -160,6 +166,8 @@ class QuizActivity : AppCompatActivity() {
             buttonOption4.text = question.option4
 
             resetButtonColors()
+            clearFeedback()  // NEW: Clear feedback when showing new question
+            enableAnswerButtons()  // NEW: Re-enable buttons
             selectedAnswer = -1
             buttonNext.isEnabled = false
         }
@@ -196,15 +204,54 @@ class QuizActivity : AppCompatActivity() {
             correctButton.setBackgroundColor(getColor(android.R.color.holo_green_light))
         }
 
+        // FIXED: Replace Toast with inline feedback
+        showFeedback(isCorrect, question.explanation)
+
         if (isCorrect) {
             score++
-            Toast.makeText(this, "Correct! ${question.explanation}", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this, "Wrong! ${question.explanation}", Toast.LENGTH_LONG).show()
         }
+
+        // Disable buttons to prevent multiple selections
+        disableAnswerButtons()
 
         buttonNext.isEnabled = true
         buttonNext.text = if (currentQuestionIndex < questions.size - 1) "Next" else "Finish"
+    }
+
+    // NEW: Show feedback in TextView instead of Toast
+    private fun showFeedback(isCorrect: Boolean, explanation: String) {
+        textViewFeedback.visibility = View.VISIBLE
+        textViewFeedback.text = if (isCorrect) {
+            "✓ Correct! $explanation"
+        } else {
+            "✗ Wrong! $explanation"
+        }
+        textViewFeedback.setTextColor(
+            if (isCorrect) getColor(android.R.color.holo_green_dark)
+            else getColor(android.R.color.holo_red_dark)
+        )
+    }
+
+    // NEW: Clear feedback
+    private fun clearFeedback() {
+        textViewFeedback.visibility = View.GONE
+        textViewFeedback.text = ""
+    }
+
+    // NEW: Disable answer buttons after selection
+    private fun disableAnswerButtons() {
+        buttonOption1.isEnabled = false
+        buttonOption2.isEnabled = false
+        buttonOption3.isEnabled = false
+        buttonOption4.isEnabled = false
+    }
+
+    // NEW: Enable answer buttons for new question
+    private fun enableAnswerButtons() {
+        buttonOption1.isEnabled = true
+        buttonOption2.isEnabled = true
+        buttonOption3.isEnabled = true
+        buttonOption4.isEnabled = true
     }
 
     private fun resetButtonColors() {
